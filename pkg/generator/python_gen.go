@@ -1,10 +1,8 @@
 package generator
 
-type PythonGenerator struct{
-
+type PythonGenerator struct {
 }
 
-
-func (*PythonGenerator) Generate(file_path string){
+func (*PythonGenerator) Generate(file_path string) {
 
 }

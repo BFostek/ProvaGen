@@ -1,0 +1,40 @@
+config.yaml
+# General
+*.dll
+*.so
+*.dylib
+*.log
+*.tmp
+*.swp
+*.swo
+*.out
+.DS_Store
+Thumbs.db
+
+# Go specific
+/bin/
+/dist/
+/vendor/
+/go.work
+*.test
+*.prof
+
+# IDE specific
+.idea/
+.vscode/
+*.iml
+
+# Project specific
+/config.yaml      # Ignore config file
+/curl_ncode       # Ignore curl script/binary
+/cache/           # Ignore cached data files
+
+# Dependency directories
+/node_modules/
+/bower_components/
+
+# Local development environment files
+.env
+.env.local
+.env.development
+.env.test
