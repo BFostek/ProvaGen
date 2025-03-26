@@ -12,5 +12,7 @@ type TestCase[T any] struct{
 type Challenge struct {
 	Name string
   Tests map[string]*any
+
+  Description *string
   InitialFile *string
 }
