@@ -13,12 +13,77 @@ import (
 )
 
 type NCode struct {
+	json_str string
+}
+
+type RawChallenge struct {
+	Result struct {
+		Name        string `json:"name"`
+		Description string `json:"description"`
+		Solutions   struct {
+			Python string `json:"python"`
+		} `json:"solutions"`
+		InitialCode struct {
+			Python string `json:"python"`
+		} `json:"starterCode"`
+		CustomTestCases []string `json:"custom_test_cases"`
+	} `json:"result"`
+}
+
+func convertViaIntermediate(jsonData string) (*Challenge, error) {
+	var raw RawChallenge
+	if err := json.Unmarshal([]byte(jsonData), &raw); err != nil {
+		return nil, err
+	}
+
+	challenge := &Challenge{
+		Name: raw.Result.Name,
+	}
+
+	if raw.Result.Description != "" {
+		challenge.Description = &raw.Result.Description
+	}
+
+	if raw.Result.InitialCode.Python != "" {
+		println("Entrou aqui")
+		challenge.InitialFile = &raw.Result.InitialCode.Python
+	}
+	if raw.Result.Solutions.Python != "" {
+		challenge.Solution = &raw.Result.Solutions.Python
+	}
+	challenge.Tests = make([]map[string]string, len(raw.Result.CustomTestCases))
+	for index, tc := range raw.Result.CustomTestCases {
+		question_map := make(map[string]string)
+		test_line := strings.Split(tc, "\n")
+		for _, line := range test_line {
+			l := strings.Split(line, "=")
+			question_map[l[0]] = l[1]
+		}
+		challenge.Tests[index] = question_map
+	}
+
+	println(challenge.Name)
+	return challenge, nil
+}
+
+func (ncode *NCode) GetChallenge() (Challenge, error) {
+	var err error
+	if val, err := convertViaIntermediate(ncode.json_str); err == nil {
+		return *val, nil
+	}
+
+	return Challenge{}, err
 }
 
 func NCodeInit(initial_param string) (*NCode, error) {
+	result := NCode{}
+	var problem_slug = initial_param
 	if isUrl(initial_param) {
-		var problem_slug = get_problem_slug(initial_param)
-		return get_problem(problem_slug)
+		problem_slug = get_problem_slug(initial_param)
+	}
+	if problem, err := get_problem(problem_slug); err == nil {
+		result.json_str = problem
+		return &result, nil
 	}
 	return nil, nil
 }
@@ -28,12 +93,8 @@ func get_problem_slug(url string) string {
 	return vals[len(vals)-1]
 }
 
-func get_problem(slug string) (*NCode, error) {
-	_, err := check_cache(slug, makeRequest)
-	if err != nil {
-		println(err.Error())
-	}
-	return nil, nil
+func get_problem(slug string) (string, error) {
+	return check_cache(slug, makeRequest)
 }
 
 func makeRequest(problemId string) (*string, error) {
