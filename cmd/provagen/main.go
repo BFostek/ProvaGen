@@ -1,10 +1,11 @@
 package main
 
 import (
-	"github.com/BFostek/ProvaGen/pkg/scraper"
+	"github.com/BFostek/ProvaGen/pkg/generator"
 )
 
 func main() {
-	scraper.NCodeInit(".url")
-
+  gen := generator.GeneratorFactory("")
+  gen.Generate("", "duplicate-integer")
+  
 }
