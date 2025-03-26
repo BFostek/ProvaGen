@@ -1,8 +1,10 @@
 package main
 
-import "fmt"
+import (
+	"github.com/BFostek/ProvaGen/pkg/scraper"
+)
 
-func main()  {
-  fmt.Println("Hello world")
-  
+func main() {
+	scraper.NCodeInit(".url")
+
 }
