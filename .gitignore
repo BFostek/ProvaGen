@@ -27,7 +27,7 @@ Thumbs.db
 # Project specific
 /config.yaml      # Ignore config file
 /curl_ncode       # Ignore curl script/binary
-cache/           # Ignore cached data files
+cache/*           # Ignore cached data files
 
 # Dependency directories
 /node_modules/

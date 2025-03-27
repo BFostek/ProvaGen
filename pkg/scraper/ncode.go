@@ -17,8 +17,9 @@ type NCode struct {
 }
 
 type RawChallenge struct {
-	Result struct {
+	Result *struct {
 		Name        string `json:"name"`
+		Id          string `json:"id"`
 		Description string `json:"description"`
 		Solutions   struct {
 			Python string `json:"python"`
@@ -35,9 +36,12 @@ func convertViaIntermediate(jsonData string) (*Challenge, error) {
 	if err := json.Unmarshal([]byte(jsonData), &raw); err != nil {
 		return nil, err
 	}
+	if raw.Result == nil {
+		return nil, fmt.Errorf("Challenge doesn't exist")
+	}
 
 	challenge := &Challenge{
-		Name: raw.Result.Name,
+		Name: raw.Result.Name, Slug: raw.Result.Id,
 	}
 
 	if raw.Result.Description != "" {
@@ -45,7 +49,6 @@ func convertViaIntermediate(jsonData string) (*Challenge, error) {
 	}
 
 	if raw.Result.InitialCode.Python != "" {
-		println("Entrou aqui")
 		challenge.InitialFile = &raw.Result.InitialCode.Python
 	}
 	if raw.Result.Solutions.Python != "" {
@@ -62,17 +65,15 @@ func convertViaIntermediate(jsonData string) (*Challenge, error) {
 		challenge.Tests[index] = question_map
 	}
 
-	println(challenge.Name)
 	return challenge, nil
 }
 
 func (ncode *NCode) GetChallenge() (Challenge, error) {
-	var err error
 	if val, err := convertViaIntermediate(ncode.json_str); err == nil {
 		return *val, nil
+	} else {
+		return Challenge{}, err
 	}
-
-	return Challenge{}, err
 }
 
 func NCodeInit(initial_param string) (*NCode, error) {

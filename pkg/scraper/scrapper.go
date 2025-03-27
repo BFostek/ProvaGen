@@ -11,6 +11,7 @@ type TestCase[T any] struct {
 }
 
 type Challenge struct {
+  Slug        string
 	Name        string
 	Tests       []map[string]string
 	Description *string
