@@ -45,11 +45,18 @@ func (pg *PythonGenerator) CreateFiles(val scraper.Challenge, destination string
 		utils.CreateFileWithContent(path.Join(destination, "solution.py"), *val.Solution)
 	}
 	if val.Description != nil {
+		//TODO Parse description file
 		utils.CreateFileWithContent(path.Join(destination, "description"), *val.Description)
 	}
 	if val.Tests != nil {
+		for idx, item := range val.Tests {
+			for l, v := range item {
+				println(idx, l, v)
+			}
+
+		}
 		utils.CreateFileWithContent(path.Join(destination, "main_test.py"), "")
-    //TODO test
+		//TODO test
 	}
 }
 func (pg *PythonGenerator) includeMainContent(s string) string {
