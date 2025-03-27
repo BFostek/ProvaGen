@@ -41,6 +41,16 @@ func (pg *PythonGenerator) CreateFiles(val scraper.Challenge, destination string
 		fullContent := *val.InitialFile + mainContent
 		utils.CreateFileWithContent(path.Join(destination, "main.py"), fullContent)
 	}
+	if val.Solution != nil {
+		utils.CreateFileWithContent(path.Join(destination, "solution.py"), *val.Solution)
+	}
+	if val.Description != nil {
+		utils.CreateFileWithContent(path.Join(destination, "description"), *val.Description)
+	}
+	if val.Tests != nil {
+		utils.CreateFileWithContent(path.Join(destination, "main_test.py"), "")
+    //TODO test
+	}
 }
 func (pg *PythonGenerator) includeMainContent(s string) string {
 	mainBlock := `
